@@ -1,4 +1,4 @@
-!/usr/bin/env python3
+#!/usr/bin/env python3
 """PyBluez simple example rfcomm-server.py
 Simple demonstration of a server application that uses RFCOMM sockets.
 Author: Albert Huang <albert@csail.mit.edu>
