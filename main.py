@@ -1,7 +1,7 @@
-from stm import *
-from android import *
+#from stm import *
+#from android import *
 from pc import *
-from config import *
+#from config import *
 import threading
 import os
 
@@ -13,7 +13,7 @@ import time
 import serial
 from threading import Thread
 import importlib.util
-from start_camtopc import *
+#from start_camtopc import *
 
 
 class RaspberryPi(threading.Thread):
@@ -35,6 +35,10 @@ class RaspberryPi(threading.Thread):
         #Android read and write thread
         readAndroidThread = threading.Thread(target = self.read_Android, args = (), name = "read_android_thread")
         writeAndroidThread = threading.Thread(target = self.write_Android, args = (), name = "write_android_thread")
+
+        # STM read and write thread
+        readSTMThread = threading.Thread(target = self.read_STM, args = (), name = "read_STM_thread")
+        writeSTMThread = threading.Thread(target = self.write_STM, args = (), name = "write_STM_thread")
 
 
 
