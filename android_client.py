@@ -4,7 +4,7 @@ import sys
 if sys.version < '3':
     input = raw_input
 
-addr = None
+addr = "CC:46:4E:E1:D0:1D"
 
 if len(sys.argv) < 2:
     print("no device specified.  Searching all nearby bluetooth devices for")
@@ -14,8 +14,13 @@ else:
     print("Searching for SampleServer on %s" % addr)
 
 # search for the SampleServer service
-uuid = "94f39d29-7d6d-437d-973b-fba39e49d4ee"
+uuid = "00001101-0000-1000-8000-00805F9B34FB"
 service_matches = find_service( uuid = uuid, address = addr )
+# service_matches = find_service()
+
+print("service matches")
+for i in service_matches:
+    print(i)
 
 if len(service_matches) == 0:
     print("couldn't find the SampleServer service =(")
@@ -32,10 +37,11 @@ print("connecting to \"%s\" on %s" % (name, host))
 sock=BluetoothSocket( RFCOMM )
 sock.connect((host, port))
 
-print("connected.  type stuff")
+print("connected.  type stuff here!")
 while True:
     data = input()
     if len(data) == 0: break
     sock.send(data)
+    print("From AA: " + str(sock.recv(1024)))
 
 sock.close()
