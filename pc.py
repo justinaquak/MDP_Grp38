@@ -2,14 +2,13 @@ import socket
 import sys
 import traceback
 import errno
+from setting import *
 
-WIFI_IP = "192.168.38.1"
-WIFI_PORT = 5001
 
 class PCInterface(object):
 
     def __init__(self):
-        self.host = WIFI_IP
+        self.host = RPI_WIFI_IP
         self.port = WIFI_PORT
         self.isConnected = False
 
@@ -19,7 +18,7 @@ class PCInterface(object):
             self.connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.connection.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             self.connection.bind((self.host, self.port))
-            print("Bind completed")
+            print("Socket Bind")
 
             self.connection.listen(3)
             print ("Waiting for connection from PC........")
@@ -42,7 +41,7 @@ class PCInterface(object):
         except Exception as e:
             print("Failed to disconnect from PC: %s" %str(e))
 
-    def writeToPC(self):
+    def writeToPC(self, message):
         try:
             encoded_string = message.encode()
             byte_array = bytearray(encoded_string)

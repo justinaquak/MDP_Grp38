@@ -1,8 +1,8 @@
 from bluetooth import *
-#from config import *
+from setting import *
 import time
 
-BLUETOOTH_PORT = 0 #some number 
+#BLUETOOTH_PORT = 0 #some number 
 
 class AndroidApplication(object):
 
@@ -11,10 +11,10 @@ class AndroidApplication(object):
         self.clientSocket = None
         self.connection = False
 
-    def isItConnected (self):
+    def isConnected (self):
         return self.connection
 
-    def connectToTablet (self):
+    def connectToAndroid (self):
         try:
             print("Bluetooth port number : " + BLUETOOTH_PORT)
             self.serverSocket = BluetoothSocket(RFCOMM)
@@ -34,23 +34,23 @@ class AndroidApplication(object):
             print ("Closing bluetooth connection")
             self.connection = False 
 
-    def disconnectFromTablet (self):
+    def disconnectFromAndroid (self):
         self.clientSocket.close()
         print ("Closing bluetooth (client)")
         self.serverSocket.close()
         print ("Closing bluetooth (server)")
         self.connection = False 
 
-    def writeToTablet (self, msg):
+    def writeToAndroid (self, msg):
         try:
             self.clientSocket.send(msg)
             print ("Sent to Android : %s" %(msg))
 
         except Exception as e:
             print("Error with Bluetooth, waiting for rpi to reconnect")
-            self.connectToTablet()
+            self.connectToAndroid()
 
-    def readFromTablet (self):
+    def readFromAndroid (self):
         try:
             msg = self.clientSocket.recv(1024)
             msg = msg.decode('utf-8')
