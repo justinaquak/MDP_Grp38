@@ -1,7 +1,7 @@
 from operator import truediv
 from stm import *
-from android import *
-from pc import *
+#from android import *
+#from pc import *
 #from config import *
 import threading
 import os
@@ -34,22 +34,22 @@ class RaspberryPi(threading.Thread):
 
     def multithread(self):
         #Android read and write thread
-        readAndroidThread = threading.Thread(target = self.readFromAndroid, args = (), name = "read_android_thread")
-        writeAndroidThread = threading.Thread(target = self.writeToAndroid, args = (), name = "write_android_thread")
+        #readAndroidThread = threading.Thread(target = self.readFromAndroid, args = (), name = "read_android_thread")
+        #writeAndroidThread = threading.Thread(target = self.writeToAndroid, args = (), name = "write_android_thread")
 
         # STM read and write thread
         readSTMThread = threading.Thread(target = self.read_STM, args = (), name = "read_STM_thread")
         writeSTMThread = threading.Thread(target = self.write_STM, args = (), name = "write_STM_thread")
 
         # PC read and write thread
-        readPCthread = threading.Thread(target = self.readFromPC, args = (), name = "read_pc_thread")
-        writePCthread = threading.Thread(target = self.writeToPC, args = (), name = "write_pc_thread")
+        #readPCthread = threading.Thread(target = self.readFromPC, args = (), name = "read_pc_thread")
+        #writePCthread = threading.Thread(target = self.writeToPC, args = (), name = "write_pc_thread")
 
         # start running the thread for PC
-        readPCthread.start()
+        #readPCthread.start()
 
         # Start running thread for Android
-        readAndroidThread.start()
+        #readAndroidThread.start()
 
         # Start running thread for STM
         readSTMThread.start()
