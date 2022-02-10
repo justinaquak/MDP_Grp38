@@ -32,7 +32,7 @@ class PCInterface(object):
             print ("Please wait to try again")
 
 
-    def disconnect(self):
+    def disconnectFromPC(self):
         try:
             self.socket.close()
             self.connected = False

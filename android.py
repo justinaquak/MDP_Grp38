@@ -20,8 +20,8 @@ class AndroidApplication(object):
             self.serverSocket = BluetoothSocket(RFCOMM)
             self.serverSocket.bind(("", 6))
             self.serverSocket.listen(1)
-            self.port = 6
-            print ("Connection via Bluetooth RFCOMM channel %d" % 6)
+            self.port = BLUETOOTH_PORT
+            print ("Connection via Bluetooth RFCOMM channel %d" %BLUETOOTH_PORT)
             self.clientSocket, clientInfo = self.serverSocket.accept()
 
             print ("Rpi has accepted connection from ", clientInfo)
