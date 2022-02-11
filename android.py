@@ -34,7 +34,7 @@ class AndroidApplication(object):
 			self.sock.connect((host, port))
 			print ("Successfully Connected to Android :)")
 			print ("Connection via Bluetooth RFCOMM channel %d" %port)
-			# self.sock, clientInfo = self.serverSocket.accept()
+			#self.sock, clientInfo = self.serverSocket.accept()
 			#print ("Rpi has accepted connection from ", clientInfo)  
 			self.connection = True
 
@@ -42,7 +42,8 @@ class AndroidApplication(object):
 			print ("Bluetooth connection has failed, waiting to reconnect. ")
 			#self.sock.close()
 			print ("Closing bluetooth connection")
-			# self.connection = False 
+			self.connection = False
+			raise
 
 	def disconnectFromAndroid (self):
 		self.sock.close()
@@ -53,11 +54,12 @@ class AndroidApplication(object):
 
 	def writeToAndroid (self, msg):
 		try:
+			print(msg)
 			self.sock.send(msg)
 			print ("Sent to Android : %s" %(msg))
 
 		except Exception as e:
-			print("Error with Bluetooth: ", str(e))
+			print("Error with Bluetooth(write): ", str(e))
 			#self.connectToAndroid()
 
 	def readFromAndroid (self):
@@ -69,5 +71,5 @@ class AndroidApplication(object):
 			return (msg)
 
 		except Exception as e:
-			print("Error with Bluetooth: ", str(e))
+			print("Error with Bluetooth(read): ", str(e))
 			#self.connectToAndroid()

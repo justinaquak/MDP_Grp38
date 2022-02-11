@@ -25,8 +25,8 @@ class RaspberryPi(threading.Thread):
 
 		#initalise connections
 		#self.STMThread.connectToSTM()
-		self.androidThread.connectToAndroid()
-		#self.pcThread.connectToPC()
+		#self.androidThread.connectToAndroid()
+		self.pcThread.connectToPC()
 
 		time.sleep(1)
 
@@ -34,8 +34,8 @@ class RaspberryPi(threading.Thread):
 
 	def multithread(self):
 		#Android read and write thread
-		readAndroidThread = threading.Thread(target = self.readFromAndroid, args = (), name = "read_android_thread")
-		writeAndroidThread = threading.Thread(target = self.writeToAndroid, args = (), name = "write_android_thread")
+		#readAndroidThread = threading.Thread(target = self.readFromAndroid, args = (), name = "read_android_thread")
+		#writeAndroidThread = threading.Thread(target = self.writeToAndroid, args = (), name = "write_android_thread")
 
 		"""# STM read and write thread
 		readSTMThread = threading.Thread(target = self.read_STM, args = (), name = "read_STM_thread")
@@ -46,20 +46,20 @@ class RaspberryPi(threading.Thread):
 		writePCthread = threading.Thread(target = self.writeToPC, args = (), name = "write_pc_thread")
 
 		# Set daemon for all thread      
-		readPCthread.daemon = True
-		writePCthread.daemon = True
+		#readPCthread.daemon = True
+		#writePCthread.daemon = True
 
-		readAndroidThread.daemon = True
-		writeAndroidThread.daemon = True
+		#readAndroidThread.daemon = True
+		#writeAndroidThread.daemon = True
 
 		# readSTMThread.daemon = True
 		# writeSTMThread.daemon = True
 
 		# start running the thread for PC
-		#readPCthread.start()
+		readPCthread.start()
 
 		# Start running thread for Android
-		readAndroidThread.start()
+		#readAndroidThread.start()
  
 		# Start running thread for STM
 		#readSTMThread.start()
@@ -71,7 +71,8 @@ class RaspberryPi(threading.Thread):
 
 	def writeToAndroid(self, message):
 		if(self.androidThread.isConnected):
-			self.androidThread.writeToAndroid()
+			print("Sending Message")
+			self.androidThread.writeToAndroid(message)
 			return True
 		return False
 

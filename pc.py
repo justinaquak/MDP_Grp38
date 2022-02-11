@@ -29,23 +29,21 @@ class PCInterface(object):
 
 			#self.connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 			#self.connection.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-			try:
-				#self.connection.bind((self.host, self.port))
-				server_socket = socket.socket()
-				server_socket.bind(('0.0.0.0', WIFI_PORT))
-				server_socket.listen(0)
-			except Exception as e:
-				print("Your PC Socket has failed: ", str(e))
+			#self.connection.bind((self.host, self.port))
+
+			server_socket = socket.socket()
+			server_socket.bind(('0.0.0.0', WIFI_PORT))
+			server_socket.listen(0)
 			print("Socket Bind")
 
-			self.connection.listen(3)
+			#self.connection.listen(3)
 			print ("Waiting for connection from PC........")
 
 			# Accept a single connection and make a file-like object out of it
 			connection = server_socket.accept()[0].makefile('rb')
 
 			#self.clientSocket, self.address = self.connection.accept()
-			print ("Connected to PC with the IP Address: ", self.address, ":)")
+			print ("Connected to PC with the IP Address: ", ":)")
 			#set connection as true
 			self.isConnected = True
 
