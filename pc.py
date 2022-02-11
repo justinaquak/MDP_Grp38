@@ -7,90 +7,90 @@ from setting import *
 
 class PCInterface(object):
 
-    def __init__(self):
-        self.host = RPI_WIFI_IP
-        self.port = WIFI_PORT
-        self.isConnected = False
+	def __init__(self):
+		self.host = RPI_WIFI_IP
+		self.port = WIFI_PORT
+		self.isConnected = False
 
 
-    def connectToPC (self):
-        try:
-            """"
-            Client
-            # Connect a client socket to my_server:8000 (change my_server to the
-            # hostname of your server)
-            client_socket = socket.socket()
-            client_socket.connect(('192.168.38.21', 8000))
+	def connectToPC (self):
+		try:
+			""""
+			Client
+			# Connect a client socket to my_server:8000 (change my_server to the
+			# hostname of your server)
+			client_socket = socket.socket()
+			client_socket.connect(('192.168.38.21', 8000))
 
-            # Make a file-like object out of the connection
-            connection = client_socket.makefile('wb')         
-            """
-
-
-            #self.connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            #self.connection.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-            try:
-                #self.connection.bind((self.host, self.port))
-                server_socket = socket.socket()
-                server_socket.bind(('0.0.0.0', WIFI_PORT))
-                server_socket.listen(0)
-            except Exception as e:
-                print("Your PC Socket has failed: ", str(e))
-            print("Socket Bind")
-
-            self.connection.listen(3)
-            print ("Waiting for connection from PC........")
-
-            # Accept a single connection and make a file-like object out of it
-            connection = server_socket.accept()[0].makefile('rb')
-
-            #self.clientSocket, self.address = self.connection.accept()
-            print ("Connected to PC with the IP Address: ", self.address, ":)")
-            #set connection as true
-            self.isConnected = True
-
-        except Exception as e:
-            print ("Exception Error : %s" % str(e))
-            print ("Please wait to try again")
+			# Make a file-like object out of the connection
+			connection = client_socket.makefile('wb')         
+			"""
 
 
-    def disconnectFromPC(self):
-        try:
-            self.socket.close()
-            self.connected = False
-            self.threadListening = False
-            print("Disconnected from PC successfully.")
-        except Exception as e:
-            print("Failed to disconnect from PC: %s" %str(e))
+			#self.connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+			#self.connection.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+			try:
+				#self.connection.bind((self.host, self.port))
+				server_socket = socket.socket()
+				server_socket.bind(('0.0.0.0', WIFI_PORT))
+				server_socket.listen(0)
+			except Exception as e:
+				print("Your PC Socket has failed: ", str(e))
+			print("Socket Bind")
 
-    def writeToPC(self, message):
-        try:
-            encoded_string = message.encode()
-            byte_array = bytearray(encoded_string)
-            self.client_socket.send(byte_array)
-            print("Send to PC: " , message)
-        except ConnectionResetError:
-            print("Failed to send to PC: ConnectionResetError")
-            self.disconnect()
-        except socket.error:
-            print("Failed to send to PC: socket.error")
-            self.disconnect()
+			self.connection.listen(3)
+			print ("Waiting for connection from PC........")
 
-    def readFromPC (self):
-        try:
-            msg = self.clientSocket.recv(1024)
-            msg = msg.decode('utf-8')
-            print(len(msg))
-            print ("Read from PC: %s" %(msg))
+			# Accept a single connection and make a file-like object out of it
+			connection = server_socket.accept()[0].makefile('rb')
 
-            if (not msg):
-                self.disconnectFromPC()
-                print('No message received, please wait to reconnect ')
-                self.connectToPC()
-                return msg
-            return msg
-        except Exception as e:
-            print ('PC message reading failed. Exception Error : %s' % str(e))
-            self.connectToPC()
+			#self.clientSocket, self.address = self.connection.accept()
+			print ("Connected to PC with the IP Address: ", self.address, ":)")
+			#set connection as true
+			self.isConnected = True
 
-    
+		except Exception as e:
+			print ("Exception Error : %s" % str(e))
+			print ("Please wait to try again")
+
+
+	def disconnectFromPC(self):
+		try:
+			self.socket.close()
+			self.connected = False
+			self.threadListening = False
+			print("Disconnected from PC successfully.")
+		except Exception as e:
+			print("Failed to disconnect from PC: %s" %str(e))
+
+	def writeToPC(self, message):
+		try:
+			encoded_string = message.encode()
+			byte_array = bytearray(encoded_string)
+			self.client_socket.send(byte_array)
+			print("Send to PC: " , message)
+		except ConnectionResetError:
+			print("Failed to send to PC: ConnectionResetError")
+			self.disconnect()
+		except socket.error:
+			print("Failed to send to PC: socket.error")
+			self.disconnect()
+
+	def readFromPC (self):
+		try:
+			msg = self.clientSocket.recv(1024)
+			msg = msg.decode('utf-8')
+			print(len(msg))
+			print ("Read from PC: %s" %(msg))
+
+			if (not msg):
+				self.disconnectFromPC()
+				print('No message received, please wait to reconnect ')
+				self.connectToPC()
+				return msg
+			return msg
+		except Exception as e:
+			print ('PC message reading failed. Exception Error : %s' % str(e))
+			self.connectToPC()
+
+	
