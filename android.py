@@ -8,7 +8,7 @@ class AndroidApplication(object):
 
     def __init__(self):
         self.serverSocket = None
-        self.clientSocket = None
+        self.sock = None
         self.connection = False
 
     def isConnected (self):
@@ -16,34 +16,49 @@ class AndroidApplication(object):
 
     def connectToAndroid (self):
         try:
-            print("Bluetooth port number : " + BLUETOOTH_PORT)
-            self.serverSocket = BluetoothSocket(RFCOMM)
-            self.serverSocket.bind(("", 6))
+            uuid = "00001101-0000-1000-8000-00805F9B34FB"
+            addr = "CC:46:4E:E1:D0:1D"
+            service_matches = find_service( uuid = uuid, address = addr )
+            
+            print(service_matches)
+            print(service_matches[0])
+            first_match = service_matches[0]
+            port = first_match["port"]
+            host = first_match["host"]
+            print("port: " + str(port) + "\nhost: " + str(host))
+            #BLUETOOTH_PORT = bluetooth.PORT_ANY
+            print("Bluetooth port number : ", port)
+            self.sock = BluetoothSocket(RFCOMM)
+            """self.serverSocket.bind(("",port))
             self.serverSocket.listen(1)
-            self.port = BLUETOOTH_PORT
-            print ("Connection via Bluetooth RFCOMM channel %d" %BLUETOOTH_PORT)
-            self.clientSocket, clientInfo = self.serverSocket.accept()
-
-            print ("Rpi has accepted connection from ", clientInfo)
-            print ("Successfully Connected to Android :)")
+            self.port = port"""
+            try:
+                self.sock.connect((host, port))
+                print ("Successfully Connected to Android :)")
+            except Exception as e:
+                print("Your android socket as failed: ", str(e))
+            print ("Connection via Bluetooth RFCOMM channel %d" %port)
+            # self.sock, clientInfo = self.serverSocket.accept()
+            #print ("Rpi has accepted connection from ", clientInfo)  
             self.connection = True
 
         except Exception as e:
             print ("Bluetooth connection has failed, waiting to reconnect. ")
-            self.serverSocket.close()
+            # self.serverSocket.close()
+            self.sock.close()
             print ("Closing bluetooth connection")
-            self.connection = False 
+            # self.connection = False 
 
     def disconnectFromAndroid (self):
-        self.clientSocket.close()
+        self.sock.close()
         print ("Closing bluetooth (client)")
-        self.serverSocket.close()
+        # self.serverSocket.close()
         print ("Closing bluetooth (server)")
         self.connection = False 
 
     def writeToAndroid (self, msg):
         try:
-            self.clientSocket.send(msg)
+            self.sock.send(msg)
             print ("Sent to Android : %s" %(msg))
 
         except Exception as e:
@@ -52,11 +67,13 @@ class AndroidApplication(object):
 
     def readFromAndroid (self):
         try:
-            msg = self.clientSocket.recv(1024)
+            #sleep(100)
+            msg = self.sock.recv(1024)
             msg = msg.decode('utf-8')
             print("Received from Android: %s" % str(msg))
             return (msg)
 
         except Exception as e:
             print("Error with Bluetooth, waiting for rpi to reconnect")
-            self.connectToTablet()
+            print(str(e))
+            #self.connectToAndroid()

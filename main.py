@@ -24,9 +24,9 @@ class RaspberryPi(threading.Thread):
         self.androidThread = AndroidApplication()
 
         #initalise connections
-        self.STMThread.connectToSTM()
+        #self.STMThread.connectToSTM()
         self.androidThread.connectToAndroid()
-        self.pcThread.connectToPC()
+        #self.pcThread.connectToPC()
 
         time.sleep(1)
 
@@ -37,9 +37,9 @@ class RaspberryPi(threading.Thread):
         readAndroidThread = threading.Thread(target = self.readFromAndroid, args = (), name = "read_android_thread")
         writeAndroidThread = threading.Thread(target = self.writeToAndroid, args = (), name = "write_android_thread")
 
-        # STM read and write thread
+        """# STM read and write thread
         readSTMThread = threading.Thread(target = self.read_STM, args = (), name = "read_STM_thread")
-        writeSTMThread = threading.Thread(target = self.write_STM, args = (), name = "write_STM_thread")
+        writeSTMThread = threading.Thread(target = self.write_STM, args = (), name = "write_STM_thread")"""
 
         # PC read and write thread
         readPCthread = threading.Thread(target = self.readFromPC, args = (), name = "read_pc_thread")
@@ -52,17 +52,17 @@ class RaspberryPi(threading.Thread):
         readAndroidThread.daemon = True
         writeAndroidThread.daemon = True
 
-        readSTMThread.daemon = True
-        writeSTMThread.daemon = True
+        # readSTMThread.daemon = True
+        # writeSTMThread.daemon = True
 
         # start running the thread for PC
         #readPCthread.start()
 
         # Start running thread for Android
-        #readAndroidThread.start()
+        readAndroidThread.start()
  
         # Start running thread for STM
-        readSTMThread.start()
+        #readSTMThread.start()
 
     def disconnectAll(self):
         self.STMThread.disconnectFromSTM()
@@ -71,20 +71,21 @@ class RaspberryPi(threading.Thread):
 
     def writeToAndroid(self, message):
         if(self.androidThread.isConnected):
-            self.androidThread.writeToAndroid
+            self.androidThread.writeToAndroid()
             return True
         return False
 
     def readFromAndroid(self):
         if(self.androidThread.isConnected):
             while True:
-                androidMessage = self.androidThread.readFromAndroid
-                print("Read From Android: ", androidMessage)
+                # self.androidThread.connectAndroid()
+                androidMessage = self.androidThread.readFromAndroid()
+                # print("Read From Android: ", androidMessage)
         
     def readFromPC(self):
         if(self.pcThread.isConnected):
             while True:
-                pcMessage = self.pcThread.readFromPC
+                pcMessage = self.pcThread.readFromPC()
                 print("Read from PC: ", str(pcMessage))
                 # Insert message logic here
                 #pcmsgArray = msgPC.split(":")
@@ -130,16 +131,18 @@ if __name__ == "__main__":
         print("MultiTreading")
 
         try:
-            main.writeToPC("Testing")
-            main.writeToSTM("Testing")
+            print("send message")
+            #main.writeToPC("Testing")
+            #main.writeToSTM("Testing")
             main.writeToAndroid("Testing")
+            #main.readFromAndroid()
         except Exception as e:
             print(str(e))
 
     except Exception as e:
         print(str(e))
-        main.disconnectAll()
+        #main.disconnectAll()
     except KeyboardInterrupt as e:
         print("Terminating program")
-        main.disconnectAll()
+        #main.disconnectAll()
         print("Program Terminated")

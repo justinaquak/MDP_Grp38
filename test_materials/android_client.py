@@ -20,7 +20,7 @@ service_matches = find_service( uuid = uuid, address = addr )
 
 print("service matches")
 for i in service_matches:
-    print(i)
+    print("services: ", i)
 
 if len(service_matches) == 0:
     print("couldn't find the SampleServer service =(")
@@ -32,12 +32,14 @@ name = first_match["name"]
 host = first_match["host"]
 
 print("connecting to \"%s\" on %s" % (name, host))
+print("port " + str(port))
 
 # Create the client socket
 sock=BluetoothSocket( RFCOMM )
 sock.connect((host, port))
 
 print("connected.  type stuff here!")
+nextIteration = True
 while True:
     data = input()
     if len(data) == 0: break

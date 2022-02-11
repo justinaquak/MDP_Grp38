@@ -15,16 +15,38 @@ class PCInterface(object):
 
     def connectToPC (self):
         try:
-            self.connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            self.connection.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-            self.connection.bind((self.host, self.port))
+            """"
+            Client
+            # Connect a client socket to my_server:8000 (change my_server to the
+            # hostname of your server)
+            client_socket = socket.socket()
+            client_socket.connect(('192.168.38.21', 8000))
+
+            # Make a file-like object out of the connection
+            connection = client_socket.makefile('wb')         
+            """
+
+
+            #self.connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            #self.connection.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            try:
+                #self.connection.bind((self.host, self.port))
+                server_socket = socket.socket()
+                server_socket.bind(('0.0.0.0', WIFI_PORT))
+                server_socket.listen(0)
+            except Exception as e:
+                print("Your PC Socket has failed: ", str(e))
             print("Socket Bind")
 
             self.connection.listen(3)
             print ("Waiting for connection from PC........")
 
-            self.clientSocket, self.address = self.connection.accept()
+            # Accept a single connection and make a file-like object out of it
+            connection = server_socket.accept()[0].makefile('rb')
+
+            #self.clientSocket, self.address = self.connection.accept()
             print ("Connected to PC with the IP Address: ", self.address, ":)")
+            #set connection as true
             self.isConnected = True
 
         except Exception as e:
@@ -46,7 +68,7 @@ class PCInterface(object):
             encoded_string = message.encode()
             byte_array = bytearray(encoded_string)
             self.client_socket.send(byte_array)
-            print("Send to PC: " + message)
+            print("Send to PC: " , message)
         except ConnectionResetError:
             print("Failed to send to PC: ConnectionResetError")
             self.disconnect()
@@ -66,9 +88,7 @@ class PCInterface(object):
                 print('No message received, please wait to reconnect ')
                 self.connectToPC()
                 return msg
-
             return msg
-
         except Exception as e:
             print ('PC message reading failed. Exception Error : %s' % str(e))
             self.connectToPC()
