@@ -9,23 +9,28 @@ class AndroidApplication(object):
 	def __init__(self):
 		#self.serverSocket = None
 		self.sock = None
-		self.connection = False
-
-	def isConnected (self):
-		return self.connection
+		self.isConnected = False
 
 	def connectToAndroid (self):
 		try:
-			service_matches = find_service( uuid = UUID, address = ANDROID_ADDR )
+			print("Connecting to Android Device")
+			while True:
+				service_matches = find_service( uuid = UUID, address = ANDROID_ADDR )
+				if  len(service_matches) > 0:	
+					first_match = service_matches[0]
+					port = first_match["port"]
+					host = first_match["host"]
+					#print(service_matches)
+					#print(service_matches[0])
+					break
+				else:
+					print("Cannot find bluetooth device")
+					time.sleep(1)
 			
-			#print(service_matches)
-			#print(service_matches[0])
-			first_match = service_matches[0]
-			port = first_match["port"]
-			host = first_match["host"]
+			self.sock = BluetoothSocket(RFCOMM)
 			print("port: " + str(port) + "\nhost: " + str(host))
 			print("Bluetooth port number : ", port)
-			self.sock = BluetoothSocket(RFCOMM)
+	
 
 			"""self.serverSocket.bind(("",port))
 			self.serverSocket.listen(1)
@@ -33,43 +38,40 @@ class AndroidApplication(object):
 
 			self.sock.connect((host, port))
 			print ("Successfully Connected to Android :)")
-			print ("Connection via Bluetooth RFCOMM channel %d" %port)
+			print ("Connection via Bluetooth port: %s, host: %s" %(port, host))
 			#self.sock, clientInfo = self.serverSocket.accept()
 			#print ("Rpi has accepted connection from ", clientInfo)  
-			self.connection = True
+			self.isConnected = True
 
 		except Exception as e:
-			print ("Bluetooth connection has failed, waiting to reconnect. ")
+			print ("Bluetooth connection has failed, waiting to reconnect. ", str(e))
 			#self.sock.close()
 			print ("Closing bluetooth connection")
-			self.connection = False
-			raise
+			self.isConnected = False
 
 	def disconnectFromAndroid (self):
 		self.sock.close()
 		print ("Closing bluetooth (client)")
-		# self.serverSocket.close()
 		#print ("Closing bluetooth (server)")
-		self.connection = False 
+		self.isConnected = False 
 
 	def writeToAndroid (self, msg):
 		try:
-			print(msg)
 			self.sock.send(msg)
 			print ("Sent to Android : %s" %(msg))
-
 		except Exception as e:
 			print("Error with Bluetooth(write): ", str(e))
-			#self.connectToAndroid()
+			self.isConnected = False 
+			#self.sock.close()
+			self.connectToAndroid()
 
 	def readFromAndroid (self):
 		try:
-			#sleep(100)
 			msg = self.sock.recv(1024)
 			msg = msg.decode('utf-8')
-			print("Received from Android: %s" % str(msg))
 			return (msg)
-
 		except Exception as e:
 			print("Error with Bluetooth(read): ", str(e))
-			#self.connectToAndroid()
+			self.isConnected = False
+			#self.sock.close()
+			self.connectToAndroid()

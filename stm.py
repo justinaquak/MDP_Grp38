@@ -45,6 +45,7 @@ class STMRobot:
 		
 		except Exception as e:
 			print ("Failed to send message to STM. Exception Error : %s" %str(e))
+			self.isConnected = False
 			self.connectToSTM()
 
 	def readFromSTM (self):
@@ -54,7 +55,7 @@ class STMRobot:
 			receivedMsg = str(receivedMsg)
 			print ("Received from STM: %s" % receivedMsg)
 			return receivedMsg
-
 		except Exception as e:
 			print ("Failed to receive message from STM")
+			self.isConnected = False
 			self.connectToSTM()
