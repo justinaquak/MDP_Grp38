@@ -20,11 +20,12 @@ try:
             break
         # Construct a stream to hold the image data and read the image
         # data from the connection
-        image_stream = io.BytesIO()
-        image_stream.write(connection.read(image_len))
-        # Rewind the stream, open it as an image with PIL and do some
-        # processing on it
-        image_stream.seek(0)
+        image_stream_IO = io.BytesIO()
+        image_stream = Image.open("somedirectory")
+        image_stream.save(image_stream_IO, "PNG")
+        image_stream_IO.seek(0)
+        image_stream = image_stream_IO.read()
+        Image.open(image_stream_IO)
         image = Image.open(image_stream)
         print('Image is %dx%d' % image.size)
         image.verify()
